@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+*.egg-info/
+dist/
+build/
+
+# Virtualenv
+.venv/
+venv/
+
+# Secrets and local config
+.env
+*.env.local
+
+# Models and data (mounted as volumes at runtime)
+models/
+data/
+
+# Dev and docs
+tests/
+docs/
+*.md
+!README.md
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Git
+.git/
+.github/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -511,10 +511,20 @@ input[type="range"] { accent-color: var(--accent); cursor: pointer; width: 90px;
 
 .app-footer {
   border-top: 1px solid var(--border);
-  padding: 20px 28px;
+  padding: 20px 28px 28px;
   max-width: 800px;
   margin: 0 auto;
   width: 100%;
+}
+
+.footer-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.footer-text {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -523,12 +533,23 @@ input[type="range"] { accent-color: var(--accent); cursor: pointer; width: 90px;
 .app-footer p {
   font-size: 11.5px;
   color: var(--text-muted);
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
 .footer-legal {
   font-family: var(--mono);
   font-size: 10.5px;
+}
+
+.footer-clear-btn {
+  flex-shrink: 0;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .footer-main { flex-direction: column; }
+  .footer-clear-btn { align-self: flex-start; }
 }
 
 @media (max-width: 520px) {

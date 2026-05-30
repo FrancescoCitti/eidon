@@ -15,6 +15,7 @@ use wasm_bindgen_futures::spawn_local;
 use app::{enroll::EnrollView, gallery_view::GalleryView, recognize::RecognizeView};
 use inference::{detector::Detector, embedder::Embedder};
 use pipeline::Pipeline;
+use gallery::gallery_clear;
 
 const DET_MODEL: &str = "./models/buffalo_s/det_500m.onnx";
 const REC_MODEL: &str = "./models/buffalo_s/w600k_mbf.onnx";
@@ -130,18 +131,33 @@ fn App() -> impl IntoView {
                     }}
                 </main>
                 <footer class="app-footer">
-                    <p>
-                        "All image processing and face recognition runs entirely within your browser. "
-                        "No photographs, video frames, or biometric data are transmitted to any server or third party. "
-                        "Face embeddings are stored exclusively in your browser's local IndexedDB and remain on your device at all times. "
-                        "You may permanently delete all stored profiles from the Profiles section."
-                    </p>
-                    <p class="footer-legal">
-                        "This application processes biometric data locally in accordance with the principle of privacy by design "
-                        "and data minimisation as defined in the EU General Data Protection Regulation "
-                        "(Regulation (EU) 2016/679, Art. 5(1)(c) and Art. 25). "
-                        "No personal data leaves your device and no third-party data processing occurs."
-                    </p>
+                    <div class="footer-main">
+                        <div class="footer-text">
+                            <p>
+                                "All image processing and face recognition runs entirely within your browser — "
+                                "no photographs, video frames, or biometric data are ever transmitted to any server or third party. "
+                                "Enrolled face embeddings are stored exclusively in your browser's IndexedDB. "
+                                "They persist across sessions on this device and are never shared. "
+                                "Closing this page does not delete your data; use the button below to erase everything permanently."
+                            </p>
+                            <p class="footer-legal">
+                                "This application processes biometric data locally in accordance with the principle of privacy by design "
+                                "and data minimisation as defined in the EU General Data Protection Regulation "
+                                "(Regulation (EU) 2016/679, Art. 5(1)(c) and Art. 25). "
+                                "No personal data leaves your device and no third-party data processing occurs."
+                            </p>
+                        </div>
+                        <button
+                            class="btn btn-danger btn-sm footer-clear-btn"
+                            on:click=move |_| {
+                                spawn_local(async move {
+                                    let _ = gallery_clear().await;
+                                });
+                            }
+                        >
+                            "Clear all data"
+                        </button>
+                    </div>
                 </footer>
             }.into_view()
         }}

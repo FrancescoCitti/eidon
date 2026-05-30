@@ -77,6 +77,9 @@ jobs:
         run: trunk build --release
         working-directory: web
 
+      - name: Add custom domain
+        run: echo "eidon.francescocitti.com" > web/dist/CNAME
+
       # ---------------------------------------------------------------
       # Deploy to GitHub Pages
       # ---------------------------------------------------------------
