@@ -1,0 +1,8 @@
+[build]
+# Relative public URL — works for any GitHub Pages subdirectory
+public_url = "./"
+dist = "dist"
+
+[watch]
+# Only rebuild when source changes
+ignore = ["dist", "public/models"]

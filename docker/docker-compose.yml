@@ -1,0 +1,29 @@
+services:
+  eidon:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: eidon:latest
+    container_name: eidon
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount models read-only — download with scripts/download_models.py first
+      - ../models:/app/models:ro
+      # Mount data read-write — gallery updates written here
+      - ../data:/app/data
+    environment:
+      # Set EIDON_API_KEY in your shell or .env to enable API-key auth
+      - EIDON_API_KEY=${EIDON_API_KEY:-}
+      - EIDON_LOG_LEVEL=${EIDON_LOG_LEVEL:-INFO}
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - "CMD"
+        - "python"
+        - "-c"
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s   # allow time for model loading on first start

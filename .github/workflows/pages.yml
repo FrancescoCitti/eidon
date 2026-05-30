@@ -1,0 +1,101 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # ---------------------------------------------------------------
+      # Download ONNX models via the Python script
+      # ---------------------------------------------------------------
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install system libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libgl1 libglib2.0-0
+
+      - name: Install Python package (runtime only)
+        run: pip install -e .
+
+      - name: Download ONNX model pack
+        run: python scripts/download_models.py
+
+      - name: Copy models to web/public
+        run: |
+          mkdir -p web/public/models/buffalo_s
+          cp models/buffalo_s/*.onnx web/public/models/buffalo_s/
+
+      # ---------------------------------------------------------------
+      # Build Rust → WASM with Trunk
+      # ---------------------------------------------------------------
+      - name: Set up Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: web -> web/target
+
+      - name: Install Trunk
+        uses: jetli/trunk-action@v0.5.0
+        with:
+          version: latest
+
+      # Pin to the same major.minor as wasm-bindgen in Cargo.lock to avoid ABI mismatch.
+      # NOTE: trunk build --release is intentionally run only in CI (GitHub Actions has
+      # 7 GB RAM; local machines may OOM on the Leptos + wasm-bindgen compilation).
+      - name: Install wasm-bindgen-cli
+        run: cargo install wasm-bindgen-cli --version 0.2.122 --locked
+
+      - name: Build frontend
+        run: trunk build --release
+        working-directory: web
+
+      # ---------------------------------------------------------------
+      # Deploy to GitHub Pages
+      # ---------------------------------------------------------------
+      - name: Configure Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4

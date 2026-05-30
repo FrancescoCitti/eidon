@@ -1,0 +1,4 @@
+target/
+dist/
+# models are downloaded by CI at build time and NOT committed
+public/models/

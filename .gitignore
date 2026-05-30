@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment / secrets
+.env
+*.env.local
+
+# Models (large binary files — download via scripts/download_models.py)
+models/
+
+# Data
+data/raw/
+data/processed/
+data/gallery/
+
+# Rust / WebAssembly (web frontend)
+web/target/
+web/dist/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# OS
+.DS_Store
+Thumbs.db
