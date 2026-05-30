@@ -29,10 +29,13 @@ fn draw_overlay(
     let Ok(Some(obj)) = canvas.get_context("2d") else { return };
     let Ok(ctx) = obj.dyn_into::<web_sys::CanvasRenderingContext2d>() else { return };
 
-    ctx.clear_rect(0.0, 0.0, canvas.width() as f64, canvas.height() as f64);
+    let w = canvas.width() as f64;
+    ctx.clear_rect(0.0, 0.0, w, canvas.height() as f64);
 
     for r in results {
-        let [x1, y1, x2, y2] = r.detection.bbox.map(|v| v as f64);
+        let [ox1, y1, ox2, y2] = r.detection.bbox.map(|v| v as f64);
+        let x1 = w - ox2;
+        let x2 = w - ox1;
         let color = if r.matched { GREEN } else { ORANGE };
         ctx.set_stroke_style(&color.into());
         ctx.set_line_width(2.0);
