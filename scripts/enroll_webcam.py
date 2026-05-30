@@ -40,12 +40,12 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Colours (BGR)
 # ---------------------------------------------------------------------------
-_GREEN  = (0, 200, 0)
+_GREEN = (0, 200, 0)
 _YELLOW = (0, 200, 220)
-_CYAN   = (220, 200, 0)
-_RED    = (60, 60, 220)
-_WHITE  = (255, 255, 255)
-_DARK   = (25, 25, 25)
+_CYAN = (220, 200, 0)
+_RED = (60, 60, 220)
+_WHITE = (255, 255, 255)
+_DARK = (25, 25, 25)
 
 # Frames the pose must be held before auto-capture fires.
 # At ~15 FPS on an N100 this is roughly 0.7 s.
@@ -58,6 +58,7 @@ _POST_CAPTURE_PAUSE = 0.6
 # ---------------------------------------------------------------------------
 # Step definitions
 # ---------------------------------------------------------------------------
+
 
 @dataclass(frozen=True)
 class _Step:
@@ -81,32 +82,42 @@ class _Step:
 _STEPS: list[_Step] = [
     _Step(
         "Look straight at the camera",
-        yaw_lo=-0.09, yaw_hi=0.09,
-        roll_lo=-9.0, roll_hi=9.0,
+        yaw_lo=-0.09,
+        yaw_hi=0.09,
+        roll_lo=-9.0,
+        roll_hi=9.0,
         arrow_dir=None,
     ),
     _Step(
         "Slowly turn your head LEFT",
-        yaw_lo=0.15,  yaw_hi=0.55,
-        roll_lo=-20.0, roll_hi=20.0,
+        yaw_lo=0.15,
+        yaw_hi=0.55,
+        roll_lo=-20.0,
+        roll_hi=20.0,
         arrow_dir=(-1.0, 0.0),
     ),
     _Step(
         "Slowly turn your head RIGHT",
-        yaw_lo=-0.55, yaw_hi=-0.15,
-        roll_lo=-20.0, roll_hi=20.0,
+        yaw_lo=-0.55,
+        yaw_hi=-0.15,
+        roll_lo=-20.0,
+        roll_hi=20.0,
         arrow_dir=(1.0, 0.0),
     ),
     _Step(
         "Tilt head to your LEFT shoulder",
-        yaw_lo=-0.12, yaw_hi=0.12,
-        roll_lo=-35.0, roll_hi=-12.0,
+        yaw_lo=-0.12,
+        yaw_hi=0.12,
+        roll_lo=-35.0,
+        roll_hi=-12.0,
         arrow_dir=(-0.7, 0.7),
     ),
     _Step(
         "Tilt head to your RIGHT shoulder",
-        yaw_lo=-0.12, yaw_hi=0.12,
-        roll_lo=12.0, roll_hi=35.0,
+        yaw_lo=-0.12,
+        yaw_hi=0.12,
+        roll_lo=12.0,
+        roll_hi=35.0,
         arrow_dir=(0.7, 0.7),
     ),
 ]
@@ -115,6 +126,7 @@ _STEPS: list[_Step] = [
 # ---------------------------------------------------------------------------
 # Pose estimation from 5 RetinaFace landmarks
 # ---------------------------------------------------------------------------
+
 
 def _estimate_pose(landmarks: np.ndarray) -> tuple[float, float]:
     """Return (yaw, roll) from 5-point landmarks.
@@ -126,9 +138,9 @@ def _estimate_pose(landmarks: np.ndarray) -> tuple[float, float]:
     roll > 0  → tilted toward right shoulder (right eye lower in image)
     roll < 0  → tilted toward left shoulder
     """
-    left_eye  = landmarks[0]
+    left_eye = landmarks[0]
     right_eye = landmarks[1]
-    nose      = landmarks[2]
+    nose = landmarks[2]
 
     eye_mid_x = float(left_eye[0] + right_eye[0]) / 2.0
     eye_width = float(abs(right_eye[0] - left_eye[0]))
@@ -136,11 +148,15 @@ def _estimate_pose(landmarks: np.ndarray) -> tuple[float, float]:
     if eye_width < 1.0:
         return 0.0, 0.0
 
-    yaw  = float(nose[0] - eye_mid_x) / eye_width
-    roll = float(np.degrees(np.arctan2(
-        right_eye[1] - left_eye[1],
-        right_eye[0] - left_eye[0],
-    )))
+    yaw = float(nose[0] - eye_mid_x) / eye_width
+    roll = float(
+        np.degrees(
+            np.arctan2(
+                right_eye[1] - left_eye[1],
+                right_eye[0] - left_eye[0],
+            )
+        )
+    )
     return yaw, roll
 
 
@@ -151,6 +167,7 @@ def _pose_ok(yaw: float, roll: float, step: _Step) -> bool:
 # ---------------------------------------------------------------------------
 # UI drawing
 # ---------------------------------------------------------------------------
+
 
 def _draw_ui(
     frame: np.ndarray,
@@ -181,12 +198,12 @@ def _draw_ui(
     for i in range(total_steps):
         cx = dot_x0 + i * (2 * dot_r + dot_gap) + dot_r
         if i < step_idx:
-            cv2.circle(frame, (cx, dot_y), dot_r, _GREEN, -1)           # done
+            cv2.circle(frame, (cx, dot_y), dot_r, _GREEN, -1)  # done
         elif i == step_idx:
-            cv2.circle(frame, (cx, dot_y), dot_r, _CYAN, -1)             # active
+            cv2.circle(frame, (cx, dot_y), dot_r, _CYAN, -1)  # active
             cv2.circle(frame, (cx, dot_y), dot_r + 2, _WHITE, 2)
         else:
-            cv2.circle(frame, (cx, dot_y), dot_r, _DARK, -1)             # pending
+            cv2.circle(frame, (cx, dot_y), dot_r, _DARK, -1)  # pending
             cv2.circle(frame, (cx, dot_y), dot_r, _WHITE, 1)
 
     # --- Main instruction text ------------------------------------------------
@@ -234,6 +251,7 @@ def _draw_ui(
 # ---------------------------------------------------------------------------
 # Main enrollment loop
 # ---------------------------------------------------------------------------
+
 
 def enroll_from_webcam(
     identity: str,
@@ -309,12 +327,12 @@ def enroll_from_webcam(
 
             # --- Auto-capture ------------------------------------------------
             if face_ok and dwell >= _DWELL_REQUIRED and now >= pause_until:
-                crop      = align_face(frame, detection.landmarks)  # type: ignore[union-attr]
+                crop = align_face(frame, detection.landmarks)  # type: ignore[union-attr]
                 embedding = embedder.embed(crop)
                 embeddings_collected.append(embedding)
                 captures_in_step += 1
-                total_captured   += 1
-                dwell      = 0
+                total_captured += 1
+                dwell = 0
                 flash_until = now + _POST_CAPTURE_PAUSE
                 pause_until = now + _POST_CAPTURE_PAUSE
 
@@ -364,9 +382,14 @@ def enroll_from_webcam(
             msg = f"All done!  {total_captured} frames captured."
             (tw, th), _ = cv2.getTextSize(msg, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2)
             cv2.putText(
-                done_frame, msg,
+                done_frame,
+                msg,
                 ((500 - tw) // 2, 115),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.7, _GREEN, 2, cv2.LINE_AA,
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.7,
+                _GREEN,
+                2,
+                cv2.LINE_AA,
             )
             cv2.imshow(title, done_frame)
             cv2.waitKey(1200)
@@ -398,6 +421,7 @@ def enroll_from_webcam(
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(

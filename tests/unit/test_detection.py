@@ -19,6 +19,7 @@ from eidon.types import Detection
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_image(h: int = 480, w: int = 640) -> np.ndarray:
     return np.zeros((h, w, 3), dtype=np.uint8)
 
@@ -43,6 +44,7 @@ def _make_mock_face(
 # ---------------------------------------------------------------------------
 # Umeyama transform
 # ---------------------------------------------------------------------------
+
 
 class TestUmeyama:
     def test_identity_when_src_equals_dst(self) -> None:
@@ -71,6 +73,7 @@ class TestUmeyama:
 # ---------------------------------------------------------------------------
 # Face alignment
 # ---------------------------------------------------------------------------
+
 
 class TestAlignFace:
     def test_output_shape_default_size(self) -> None:
@@ -115,6 +118,7 @@ class TestAlignFace:
 # RetinaFaceDetector (mocked)
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture()
 def mock_detector(tmp_path: pytest.TempPathFactory) -> RetinaFaceDetector:
     """RetinaFaceDetector with InsightFace.FaceAnalysis fully mocked."""
@@ -133,9 +137,7 @@ class TestRetinaFaceDetector:
         result = mock_detector.detect(_make_image())
         assert result == []
 
-    def test_detect_filters_below_threshold(
-        self, mock_detector: RetinaFaceDetector
-    ) -> None:
+    def test_detect_filters_below_threshold(self, mock_detector: RetinaFaceDetector) -> None:
         faces = [
             _make_mock_face([10, 10, 60, 60], _make_landmarks().tolist(), det_score=0.9),
             _make_mock_face([80, 80, 120, 120], _make_landmarks().tolist(), det_score=0.3),
@@ -156,9 +158,7 @@ class TestRetinaFaceDetector:
         result = mock_detector.detect(_make_image())
         assert result[0].score > result[1].score
 
-    def test_detect_returns_detection_dataclass(
-        self, mock_detector: RetinaFaceDetector
-    ) -> None:
+    def test_detect_returns_detection_dataclass(self, mock_detector: RetinaFaceDetector) -> None:
         mock_detector._app.get.return_value = [
             _make_mock_face([10, 10, 60, 60], _make_landmarks().tolist(), det_score=0.9)
         ]
@@ -173,9 +173,7 @@ class TestRetinaFaceDetector:
         mock_detector._app.get.return_value = []
         assert mock_detector.detect_largest(_make_image()) is None
 
-    def test_detect_largest_returns_biggest_face(
-        self, mock_detector: RetinaFaceDetector
-    ) -> None:
+    def test_detect_largest_returns_biggest_face(self, mock_detector: RetinaFaceDetector) -> None:
         faces = [
             _make_mock_face([0, 0, 100, 100], _make_landmarks().tolist(), det_score=0.9),
             _make_mock_face([0, 0, 200, 200], _make_landmarks().tolist(), det_score=0.75),
@@ -185,16 +183,12 @@ class TestRetinaFaceDetector:
         assert result is not None
         assert result.area == pytest.approx(40000.0)
 
-    def test_detect_raises_on_wrong_dtype(
-        self, mock_detector: RetinaFaceDetector
-    ) -> None:
+    def test_detect_raises_on_wrong_dtype(self, mock_detector: RetinaFaceDetector) -> None:
         float_img = np.zeros((480, 640, 3), dtype=np.float32)
         with pytest.raises(ValueError, match="uint8"):
             mock_detector.detect(float_img)
 
-    def test_detect_raises_on_wrong_shape(
-        self, mock_detector: RetinaFaceDetector
-    ) -> None:
+    def test_detect_raises_on_wrong_shape(self, mock_detector: RetinaFaceDetector) -> None:
         gray_img = np.zeros((480, 640), dtype=np.uint8)
         with pytest.raises(ValueError, match="H, W, 3"):
             mock_detector.detect(gray_img)

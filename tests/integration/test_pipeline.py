@@ -59,6 +59,7 @@ def _build_pipeline(
 # Tests
 # ---------------------------------------------------------------------------
 
+
 class TestFullDataFlow:
     def test_known_face_is_recognised(self) -> None:
         alice = _unit_vec(0)

@@ -36,6 +36,7 @@ def _load(gallery_path: Path) -> Gallery:
 # Subcommands
 # ---------------------------------------------------------------------------
 
+
 def cmd_list(gallery_path: Path) -> None:
     gallery = _load(gallery_path)
     if not gallery.identities:
@@ -98,6 +99,7 @@ def cmd_info(gallery_path: Path) -> None:
 # Entry point
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Manage the face recognition gallery")
     parser.add_argument(
@@ -108,15 +110,15 @@ def main() -> None:
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
-    sub.add_parser("list",  help="List enrolled identities")
-    sub.add_parser("info",  help="Show gallery file info")
+    sub.add_parser("list", help="List enrolled identities")
+    sub.add_parser("info", help="Show gallery file info")
 
     p_del = sub.add_parser("delete", help="Remove an identity from the gallery")
     p_del.add_argument("--identity", required=True, help="Identity name to delete")
 
     p_ren = sub.add_parser("rename", help="Rename an identity")
-    p_ren.add_argument("--identity",  required=True, help="Current identity name")
-    p_ren.add_argument("--new-name",  required=True, help="New identity name")
+    p_ren.add_argument("--identity", required=True, help="Current identity name")
+    p_ren.add_argument("--new-name", required=True, help="New identity name")
 
     args = parser.parse_args()
 

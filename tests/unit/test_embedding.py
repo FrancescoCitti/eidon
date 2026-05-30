@@ -22,6 +22,7 @@ from eidon.embedding.arcface import (
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_crop(fill: int = 128) -> np.ndarray:
     return np.full((_INPUT_SIZE, _INPUT_SIZE, 3), fill_value=fill, dtype=np.uint8)
 
@@ -52,6 +53,7 @@ def mock_embedder(tmp_path: pytest.TempPathFactory) -> ArcFaceEmbedder:
 # ---------------------------------------------------------------------------
 # _preprocess
 # ---------------------------------------------------------------------------
+
 
 class TestPreprocess:
     def test_output_shape_is_chw(self) -> None:
@@ -88,6 +90,7 @@ class TestPreprocess:
 # _l2_normalize
 # ---------------------------------------------------------------------------
 
+
 class TestL2Normalize:
     def test_unit_norm_after_normalisation(self) -> None:
         v = np.random.default_rng(1).random((4, _EMBEDDING_DIM), dtype=np.float32)
@@ -111,6 +114,7 @@ class TestL2Normalize:
 # ---------------------------------------------------------------------------
 # ArcFaceEmbedder
 # ---------------------------------------------------------------------------
+
 
 class TestArcFaceEmbedder:
     def test_embed_returns_shape_512(self, mock_embedder: ArcFaceEmbedder) -> None:

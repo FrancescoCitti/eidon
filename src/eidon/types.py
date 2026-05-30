@@ -14,9 +14,9 @@ class Detection:
     Landmarks order: left_eye, right_eye, nose_tip, left_mouth, right_mouth.
     """
 
-    bbox: np.ndarray       # float32 (4,)   — [x1, y1, x2, y2] in pixel coords
+    bbox: np.ndarray  # float32 (4,)   — [x1, y1, x2, y2] in pixel coords
     landmarks: np.ndarray  # float32 (5, 2) — five facial keypoints
-    score: float           # detection confidence in [0, 1]
+    score: float  # detection confidence in [0, 1]
 
     @property
     def area(self) -> float:
@@ -39,9 +39,9 @@ class Detection:
 class MatchResult:
     """Output of the matcher for one embedding query (no detection context)."""
 
-    identity: str    # best-match identity name, or "unknown" when below threshold
+    identity: str  # best-match identity name, or "unknown" when below threshold
     similarity: float  # cosine similarity to the nearest gallery embedding
-    matched: bool    # True when similarity >= configured threshold
+    matched: bool  # True when similarity >= configured threshold
 
 
 @dataclass(frozen=True, slots=True)
@@ -49,6 +49,6 @@ class RecognitionResult:
     """Output of the full recognition pipeline for one detected face."""
 
     detection: Detection
-    identity: str          # matched identity name, or "unknown"
-    similarity: float      # cosine similarity to matched gallery embedding
-    matched: bool          # True when similarity >= threshold
+    identity: str  # matched identity name, or "unknown"
+    similarity: float  # cosine similarity to matched gallery embedding
+    matched: bool  # True when similarity >= threshold

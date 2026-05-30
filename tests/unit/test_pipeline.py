@@ -47,6 +47,7 @@ def _make_detection(score: float = 0.95, bbox: list[float] | None = None) -> Det
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture()
 def mock_detector() -> MagicMock:
     return MagicMock()
@@ -86,6 +87,7 @@ def pipeline(
 # ---------------------------------------------------------------------------
 # recognize() — core behaviour
 # ---------------------------------------------------------------------------
+
 
 class TestRecognize:
     def test_no_faces_returns_empty_list(
@@ -227,15 +229,11 @@ class TestRecognize:
 
     # --- input validation ---
 
-    def test_raises_on_wrong_image_shape(
-        self, pipeline: EidonPipeline
-    ) -> None:
+    def test_raises_on_wrong_image_shape(self, pipeline: EidonPipeline) -> None:
         with pytest.raises(ValueError, match="H, W, 3"):
             pipeline.recognize(np.zeros((480, 640), dtype=np.uint8))
 
-    def test_raises_on_wrong_dtype(
-        self, pipeline: EidonPipeline
-    ) -> None:
+    def test_raises_on_wrong_dtype(self, pipeline: EidonPipeline) -> None:
         with pytest.raises(ValueError, match="uint8"):
             pipeline.recognize(np.zeros((480, 640, 3), dtype=np.float32))
 
@@ -243,6 +241,7 @@ class TestRecognize:
 # ---------------------------------------------------------------------------
 # update_gallery()
 # ---------------------------------------------------------------------------
+
 
 class TestUpdateGallery:
     def test_new_gallery_used_on_next_call(

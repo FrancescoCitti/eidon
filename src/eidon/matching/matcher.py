@@ -72,7 +72,7 @@ class Matcher:
         for identity in gallery.identities:
             stored = gallery.embeddings_for(identity)  # (N, 512)
             # Dot product == cosine similarity for L2-normalised vectors
-            sims: np.ndarray = stored @ query          # (N,)
+            sims: np.ndarray = stored @ query  # (N,)
             max_sim = float(sims.max())
             if max_sim > best_similarity:
                 best_similarity = max_sim

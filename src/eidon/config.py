@@ -11,13 +11,12 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Application configuration loaded from environment variables (prefix ``EIDON_``) or ``.env``.
-    """
+    """Application settings loaded from env variables (prefix ``EIDON_``) or a ``.env`` file."""
 
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
-        env_prefix="EIDON_",   # all env vars: EIDON_LOG_LEVEL, EIDON_API_KEY, etc.
+        env_prefix="EIDON_",  # all env vars: EIDON_LOG_LEVEL, EIDON_API_KEY, etc.
         case_sensitive=False,
         extra="ignore",
     )
@@ -32,9 +31,7 @@ class Settings(BaseSettings):
     )
 
     # --- Model pack ----------------------------------------------------------
-    det_model_pack: str = Field(
-        default="buffalo_s", description="InsightFace model pack name"
-    )
+    det_model_pack: str = Field(default="buffalo_s", description="InsightFace model pack name")
     det_model_name: str = Field(
         default="det_500m.onnx", description="RetinaFace detector ONNX filename"
     )

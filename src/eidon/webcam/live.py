@@ -31,6 +31,7 @@ _SHADOW = (20, 20, 20)
 # FPS counter
 # ---------------------------------------------------------------------------
 
+
 class _FPSCounter:
     """Rolling-window frames-per-second estimator."""
 
@@ -49,6 +50,7 @@ class _FPSCounter:
 # ---------------------------------------------------------------------------
 # Drawing utilities  (module-level so they are independently testable)
 # ---------------------------------------------------------------------------
+
 
 def annotate_frame(
     frame: np.ndarray,
@@ -124,6 +126,7 @@ def _draw_label(
 # Main loop
 # ---------------------------------------------------------------------------
 
+
 class LiveRecognition:
     """Webcam capture loop with real-time face recognition overlay.
 
@@ -195,9 +198,7 @@ class LiveRecognition:
                 # becomes reliable.  Checking on frame 0 always returns -1 on Wayland.
                 if (
                     frame_index > 5
-                    and cv2.getWindowProperty(
-                        self._window_title, cv2.WND_PROP_VISIBLE
-                    ) < 1
+                    and cv2.getWindowProperty(self._window_title, cv2.WND_PROP_VISIBLE) < 1
                 ):
                     logger.info("Window closed — stopping")
                     break

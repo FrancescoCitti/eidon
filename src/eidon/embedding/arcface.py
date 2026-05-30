@@ -125,6 +125,7 @@ class ArcFaceEmbedder:
 # Module-level pure functions (independently testable)
 # ------------------------------------------------------------------
 
+
 def _preprocess(crop: np.ndarray) -> np.ndarray:
     """Convert one BGR uint8 crop to a normalised CHW float32 tensor.
 

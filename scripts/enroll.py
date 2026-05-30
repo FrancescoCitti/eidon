@@ -51,8 +51,7 @@ def enroll(
     existing = gallery.size
 
     image_paths = sorted(
-        p for p in images_dir.iterdir()
-        if p.is_file() and p.suffix.lower() in _SUPPORTED_EXTENSIONS
+        p for p in images_dir.iterdir() if p.is_file() and p.suffix.lower() in _SUPPORTED_EXTENSIONS
     )
     if not image_paths:
         logger.error("No supported images found", extra={"dir": str(images_dir)})
@@ -63,6 +62,7 @@ def enroll(
 
     for img_path in image_paths:
         import cv2
+
         img = cv2.imread(str(img_path))
         if img is None:
             logger.warning("Could not read image, skipping", extra={"file": img_path.name})
@@ -84,8 +84,11 @@ def enroll(
         enrolled += 1
         logger.info(
             "Enrolled",
-            extra={"file": img_path.name, "identity": identity,
-                   "det_score": round(detection.score, 3)},
+            extra={
+                "file": img_path.name,
+                "identity": identity,
+                "det_score": round(detection.score, 3),
+            },
         )
 
     if enrolled == 0:
@@ -99,8 +102,8 @@ def enroll(
             "identity": identity,
             "enrolled": enrolled,
             "skipped": skipped,
-            "total_for_identity": enrolled + (gallery.size - existing - enrolled
-                                              if identity in gallery else 0),
+            "total_for_identity": enrolled
+            + (gallery.size - existing - enrolled if identity in gallery else 0),
             "gallery_path": str(gallery_path),
         },
     )

@@ -77,9 +77,7 @@ class RetinaFaceDetector:
         results.sort(key=lambda d: d.score, reverse=True)
         return results
 
-    def detect_largest(
-        self, image: np.ndarray, threshold: float = 0.5
-    ) -> Detection | None:
+    def detect_largest(self, image: np.ndarray, threshold: float = 0.5) -> Detection | None:
         """Return the largest (by bounding-box area) face above *threshold*.
 
         Returns ``None`` if no face is found.
@@ -115,8 +113,6 @@ class RetinaFaceDetector:
     @staticmethod
     def _validate_image(image: np.ndarray) -> None:
         if image.ndim != 3 or image.shape[2] != 3:
-            raise ValueError(
-                f"Expected BGR image with shape (H, W, 3), got {image.shape}"
-            )
+            raise ValueError(f"Expected BGR image with shape (H, W, 3), got {image.shape}")
         if image.dtype != np.uint8:
             raise ValueError(f"Expected uint8 image, got dtype {image.dtype}")

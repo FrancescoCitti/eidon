@@ -62,12 +62,13 @@ def _make_result(identity: str = "Alice", matched: bool = True) -> RecognitionRe
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture()
 def gallery(tmp_path) -> Gallery:
     g = Gallery()
     g.add("Alice", _unit_vec(0))
     g.add("Alice", _unit_vec(1))
-    g.add("Bob",   _unit_vec(2))
+    g.add("Bob", _unit_vec(2))
     return g
 
 
@@ -93,6 +94,7 @@ def client(mock_pipeline: MagicMock) -> TestClient:
 # /health
 # ---------------------------------------------------------------------------
 
+
 class TestHealth:
     def test_returns_ok(self, client: TestClient) -> None:
         r = client.get("/health")
@@ -101,8 +103,8 @@ class TestHealth:
 
     def test_reports_gallery_stats(self, client: TestClient) -> None:
         data = client.get("/health").json()
-        assert data["gallery_identities"] == 2   # Alice + Bob
-        assert data["gallery_embeddings"] == 3   # 2 for Alice, 1 for Bob
+        assert data["gallery_identities"] == 2  # Alice + Bob
+        assert data["gallery_embeddings"] == 3  # 2 for Alice, 1 for Bob
 
     def test_no_auth_required(self, client: TestClient) -> None:
         """Health is always accessible, even when API key is configured."""
@@ -113,6 +115,7 @@ class TestHealth:
 # ---------------------------------------------------------------------------
 # POST /recognize
 # ---------------------------------------------------------------------------
+
 
 class TestRecognize:
     def test_returns_matched_face(self, client: TestClient) -> None:
@@ -131,9 +134,7 @@ class TestRecognize:
         assert r.status_code == 200
         assert r.json()["count"] == 0
 
-    def test_returns_multiple_faces(
-        self, client: TestClient, mock_pipeline: MagicMock
-    ) -> None:
+    def test_returns_multiple_faces(self, client: TestClient, mock_pipeline: MagicMock) -> None:
         mock_pipeline.recognize.return_value = [
             _make_result("Alice"),
             _make_result("unknown", matched=False),
@@ -161,6 +162,7 @@ class TestRecognize:
 # POST /enroll
 # ---------------------------------------------------------------------------
 
+
 class TestEnroll:
     def test_enrolls_new_identity(
         self, client: TestClient, mock_pipeline: MagicMock, tmp_path
@@ -181,9 +183,7 @@ class TestEnroll:
         assert r.status_code == 200
         assert r.json()["identity"] == "Charlie"
 
-    def test_422_when_no_face_detected(
-        self, client: TestClient, mock_pipeline: MagicMock
-    ) -> None:
+    def test_422_when_no_face_detected(self, client: TestClient, mock_pipeline: MagicMock) -> None:
         mock_pipeline.detector.detect_largest.return_value = None
         r = client.post(
             "/enroll",
@@ -206,6 +206,7 @@ class TestEnroll:
 # GET /identities
 # ---------------------------------------------------------------------------
 
+
 class TestIdentities:
     def test_lists_enrolled_identities(self, client: TestClient) -> None:
         r = client.get("/identities")
@@ -218,8 +219,7 @@ class TestIdentities:
 
     def test_embedding_counts_correct(self, client: TestClient) -> None:
         identities = {
-            i["name"]: i["embeddings"]
-            for i in client.get("/identities").json()["identities"]
+            i["name"]: i["embeddings"] for i in client.get("/identities").json()["identities"]
         }
         assert identities["Alice"] == 2
         assert identities["Bob"] == 1
@@ -228,6 +228,7 @@ class TestIdentities:
 # ---------------------------------------------------------------------------
 # DELETE /identities/{name}
 # ---------------------------------------------------------------------------
+
 
 class TestDeleteIdentity:
     def test_deletes_existing_identity(
@@ -252,6 +253,7 @@ class TestDeleteIdentity:
 # Auth
 # ---------------------------------------------------------------------------
 
+
 class TestAuth:
     def test_no_auth_when_key_not_configured(self, client: TestClient) -> None:
         """All endpoints accessible when EIDON_API_KEY is not set."""
@@ -263,14 +265,10 @@ class TestAuth:
     ) -> None:
         with patch("eidon.serving.api.settings") as mock_settings:
             mock_settings.api_key = "secret-key"
-            r = client.post(
-                "/recognize", files={"file": ("img.jpg", _make_jpeg(), "image/jpeg")}
-            )
+            r = client.post("/recognize", files={"file": ("img.jpg", _make_jpeg(), "image/jpeg")})
         assert r.status_code == 403
 
-    def test_200_with_correct_key(
-        self, client: TestClient, mock_pipeline: MagicMock
-    ) -> None:
+    def test_200_with_correct_key(self, client: TestClient, mock_pipeline: MagicMock) -> None:
         with patch("eidon.serving.api.settings") as mock_settings:
             mock_settings.api_key = "secret-key"
             r = client.post(
@@ -280,9 +278,7 @@ class TestAuth:
             )
         assert r.status_code == 200
 
-    def test_403_with_wrong_key(
-        self, client: TestClient, mock_pipeline: MagicMock
-    ) -> None:
+    def test_403_with_wrong_key(self, client: TestClient, mock_pipeline: MagicMock) -> None:
         with patch("eidon.serving.api.settings") as mock_settings:
             mock_settings.api_key = "secret-key"
             r = client.post(

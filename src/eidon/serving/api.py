@@ -53,6 +53,7 @@ _API_KEY_HEADER = APIKeyHeader(name="X-API-Key", auto_error=False)
 # Auth dependency
 # ---------------------------------------------------------------------------
 
+
 def _verify_api_key(key: str | None = Security(_API_KEY_HEADER)) -> None:
     """Raise 403 when an API key is configured and the request key doesn't match."""
     required = settings.api_key
@@ -66,6 +67,7 @@ def _verify_api_key(key: str | None = Security(_API_KEY_HEADER)) -> None:
 # Pipeline dependency
 # ---------------------------------------------------------------------------
 
+
 def get_pipeline() -> EidonPipeline:
     """Return the loaded pipeline from app state.
 
@@ -78,6 +80,7 @@ def get_pipeline() -> EidonPipeline:
 # ---------------------------------------------------------------------------
 # Application lifespan
 # ---------------------------------------------------------------------------
+
 
 @asynccontextmanager
 async def lifespan(application: FastAPI) -> AsyncGenerator[None, None]:
@@ -104,6 +107,7 @@ app = FastAPI(
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _decode_image(data: bytes) -> np.ndarray:
     arr = np.frombuffer(data, dtype=np.uint8)
     img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
@@ -129,6 +133,7 @@ def _to_face_result(result: RecognitionResult) -> FaceResult:
 # ---------------------------------------------------------------------------
 # Endpoints
 # ---------------------------------------------------------------------------
+
 
 @app.get("/health", response_model=HealthResponse, tags=["meta"])
 def health(pipeline: EidonPipeline = Depends(get_pipeline)) -> HealthResponse:

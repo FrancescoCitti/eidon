@@ -29,13 +29,14 @@ def _orthogonal_vec(v: np.ndarray) -> np.ndarray:
     """Return a unit vector orthogonal to v (cosine similarity 0 with v)."""
     rng = np.random.default_rng(99)
     u = rng.random(_DIM, dtype=np.float32)
-    u -= u.dot(v) * v          # Gram-Schmidt projection
+    u -= u.dot(v) * v  # Gram-Schmidt projection
     return (u / np.linalg.norm(u)).astype(np.float32)
 
 
 # ---------------------------------------------------------------------------
 # Gallery — mutation
 # ---------------------------------------------------------------------------
+
 
 class TestGalleryAdd:
     def test_first_add_creates_entry(self) -> None:
@@ -135,6 +136,7 @@ class TestGalleryQueries:
 # Gallery — persistence
 # ---------------------------------------------------------------------------
 
+
 class TestGalleryPersistence:
     def test_save_load_roundtrip(self, tmp_path: Path) -> None:
         g = Gallery()
@@ -184,6 +186,7 @@ class TestGalleryPersistence:
 # ---------------------------------------------------------------------------
 # Matcher
 # ---------------------------------------------------------------------------
+
 
 class TestMatcherInit:
     def test_threshold_stored(self) -> None:
@@ -259,7 +262,7 @@ class TestMatcherMatch:
         bob = _unit_vec(2)
 
         g = Gallery()
-        g.add("Alice", alice_far)   # less similar to query
+        g.add("Alice", alice_far)  # less similar to query
         g.add("Alice", alice_near)  # more similar to query (same as query)
         g.add("Bob", bob)
 

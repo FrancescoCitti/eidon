@@ -160,6 +160,4 @@ class Gallery:
                 f"embedding must have shape ({_EMBEDDING_DIM},), got {embedding.shape}"
             )
         if embedding.dtype not in (np.float32, np.float64):
-            raise ValueError(
-                f"embedding must be float32 or float64, got {embedding.dtype}"
-            )
+            raise ValueError(f"embedding must be float32 or float64, got {embedding.dtype}")

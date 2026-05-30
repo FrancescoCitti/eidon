@@ -62,8 +62,7 @@ def main() -> None:
     except FileNotFoundError as exc:
         logger.error(str(exc))
         print(
-            "\nModels not found. Run first:\n"
-            "  python scripts/download_models.py\n",
+            "\nModels not found. Run first:\n  python scripts/download_models.py\n",
             file=sys.stderr,
         )
         raise SystemExit(1) from exc

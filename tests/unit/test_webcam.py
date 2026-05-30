@@ -56,6 +56,7 @@ def _make_mock_pipeline(results: list[RecognitionResult] | None = None) -> Magic
 # _FPSCounter
 # ---------------------------------------------------------------------------
 
+
 class TestFPSCounter:
     def test_first_tick_returns_zero(self) -> None:
         assert _FPSCounter().tick() == 0.0
@@ -87,6 +88,7 @@ class TestFPSCounter:
 # ---------------------------------------------------------------------------
 # annotate_frame
 # ---------------------------------------------------------------------------
+
 
 class TestAnnotateFrame:
     def test_output_shape_matches_input(self) -> None:
@@ -140,6 +142,7 @@ class TestAnnotateFrame:
 # LiveRecognition — init
 # ---------------------------------------------------------------------------
 
+
 class TestLiveRecognitionInit:
     def test_raises_on_skip_frames_zero(self) -> None:
         with pytest.raises(ValueError, match="skip_frames"):
@@ -157,6 +160,7 @@ class TestLiveRecognitionInit:
 # ---------------------------------------------------------------------------
 # LiveRecognition — run() (cv2 fully mocked)
 # ---------------------------------------------------------------------------
+
 
 def _make_cap_mock(frames: list[np.ndarray], *, opened: bool = True) -> MagicMock:
     cap = MagicMock()
