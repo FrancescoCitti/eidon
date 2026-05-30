@@ -8,6 +8,8 @@ Real-time face recognition built on [ArcFace](https://arxiv.org/abs/1801.07698) 
 ![Rust](https://img.shields.io/badge/rust-stable-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+**[Live demo → eidon.francescocitti.com](https://eidon.francescocitti.com)**
+
 ## What it does
 
 Eidon identifies faces in a live webcam feed or a still image and matches them against a local gallery of enrolled identities using cosine similarity over 512-dimensional ArcFace embeddings.
@@ -80,7 +82,7 @@ cd web && trunk serve
 
 ### Deploy to GitHub Pages
 
-Push to `main`. The `pages.yml` workflow downloads models, runs `trunk build --release`, and deploys `dist/` automatically.
+Push to `main`. The `pages.yml` workflow downloads models, runs `trunk build --release`, and deploys `dist/` automatically to [eidon.francescocitti.com](https://eidon.francescocitti.com).
 
 ## Python Backend
 

@@ -8,10 +8,10 @@ use crate::types::Detection;
 
 const POSES: &[(&str, &str)] = &[
     ("Look straight at the camera", "😐"),
-    ("Turn your head LEFT",         "↩"),
     ("Turn your head RIGHT",        "↪"),
-    ("Tilt your head LEFT",         "↖"),
+    ("Turn your head LEFT",         "↩"),
     ("Tilt your head RIGHT",        "↗"),
+    ("Tilt your head LEFT",         "↖"),
 ];
 const DWELL_MS: f64 = 1500.0;
 const CAPTURES_PER_POSE: usize = 2;
@@ -38,10 +38,10 @@ fn check_pose(idx: usize, m: &PoseMetrics) -> Option<&'static str> {
             else if m.roll.abs() > 14.0 { Some("Keep your head level") }
             else { None }
         }
-        1 => { if m.yaw > -0.18 { Some("Turn further to the left")  } else { None } }
-        2 => { if m.yaw < 0.18  { Some("Turn further to the right") } else { None } }
-        3 => { if m.roll < 11.0 { Some("Tilt further to the left")  } else { None } }
-        4 => { if m.roll > -11.0{ Some("Tilt further to the right") } else { None } }
+        1 => { if m.yaw > -0.18 { Some("Turn further to the right") } else { None } }
+        2 => { if m.yaw < 0.18  { Some("Turn further to the left")  } else { None } }
+        3 => { if m.roll < 11.0 { Some("Tilt further to the right") } else { None } }
+        4 => { if m.roll > -11.0{ Some("Tilt further to the left")  } else { None } }
         _ => None,
     }
 }
