@@ -137,8 +137,9 @@ fn App() -> impl IntoView {
                                 "All image processing and face recognition runs entirely within your browser — "
                                 "no photographs, video frames, or biometric data are ever transmitted to any server or third party. "
                                 "Enrolled face embeddings are stored exclusively in your browser's IndexedDB. "
-                                "In normal browsing, this data persists across sessions: closing the page or restarting "
-                                "the browser does not delete it. "
+                                "In normal browsing, this data persists locally in your own browser across sessions: "
+                                "closing the page or restarting the browser does not delete it, "
+                                "but it remains solely on your device and is never uploaded or synced anywhere. "
                                 "In private or incognito mode, IndexedDB is cleared automatically when the private window closes. "
                                 "To erase all stored profiles at any time, use the button below."
                             </p>
