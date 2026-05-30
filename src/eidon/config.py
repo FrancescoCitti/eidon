@@ -11,7 +11,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Application configuration loaded from environment variables (prefix ``EIDON_``) or ``.env``."""
+    """Application configuration loaded from environment variables (prefix ``EIDON_``) or ``.env``.
+    """
 
     model_config = SettingsConfigDict(
         env_file=".env",
